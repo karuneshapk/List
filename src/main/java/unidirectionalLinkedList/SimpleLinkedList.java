@@ -1,75 +1,75 @@
 package unidirectionalLinkedList;
 
 public class SimpleLinkedList {
-    Node head;
-    Node end;
-    public Node getHead() {return head;}
+    private Node headNode;
+    private Node endNode;
+    public Node getHeadNode() {return headNode;}
 
-    public Node getEnd() {return end;}
+    public Node getEndNode() {return endNode;}
 
     public void add(String value) {
-        if (head == null) {
-            head = new Node(value, null);
-            end = head;
+        if (headNode == null) {
+            headNode = new Node(value, null);
+            endNode = headNode;
         } else {
-            Node node = end;
-            end = new Node(value, null);
-            node.changeRef(end);
+            Node node = endNode;
+            endNode = new Node(value, null);
+            node.changeRefOnPreviousNode(endNode);
         }
     }
 
     @Override
     public String toString() {
-        Node reference = head;
+        Node currentlyObservedNode = headNode;
         final StringBuilder sb = new StringBuilder("[");
         boolean flagFirstItem = false;
         while (true) {
-            if (reference == null) {
+            if (currentlyObservedNode == null) {
                 sb.append("]");
                 return sb.toString();
             } else {
                 if (flagFirstItem) {
                     sb.append(", ");
                 }
-                sb.append(reference.getData());
+                sb.append(currentlyObservedNode.getData());
                 flagFirstItem = true;}
-            reference = reference.nextRef();
+            currentlyObservedNode = currentlyObservedNode.nextNode();
         }
     }
     public void revert() {
-        Node itemA = head;
-        Node itemB = itemA.nextRef();
-        if (itemB == null) {
+        Node firstCurrentlyObservedNode = headNode;
+        Node secondObservedNode = firstCurrentlyObservedNode.nextNode();
+        if (secondObservedNode == null) {
             return;
         }
-        itemA.changeRef(null);
-        Node end = itemA;
+        firstCurrentlyObservedNode.changeRefOnPreviousNode(null);
+        this.endNode = firstCurrentlyObservedNode;
 
         while (true) {
-            Node itemC = itemB.nextRef();
-            if (itemC == null) {
-                itemB.changeRef(itemA);
-                head = itemB;
+            Node thirdObservedNode = secondObservedNode.nextNode();
+            if (thirdObservedNode == null) {
+                secondObservedNode.changeRefOnPreviousNode(firstCurrentlyObservedNode);
+                headNode = secondObservedNode;
                 return;
             }
-            itemB.changeRef(itemA);
-            itemA = itemB;
-            itemB = itemC;
+            secondObservedNode.changeRefOnPreviousNode(firstCurrentlyObservedNode);
+            firstCurrentlyObservedNode = secondObservedNode;
+            secondObservedNode = thirdObservedNode;
         }
     }
 
     private class Node {
-        String data;
-        Node reference;
+        private String data;
+        private Node nextNode;
 
-        private Node(String data, Node reference) {
-            this.reference = reference;
+        private Node(String data, Node referenceOnNextNode) {
+            this.nextNode = referenceOnNextNode;
             this.data = data;
         }
 
-        private Node nextRef() { return reference;}
+        private Node nextNode() { return nextNode;}
 
-        private void changeRef(Node node) {this.reference = node;}
+        private void changeRefOnPreviousNode(Node node) {this.nextNode = node;}
 
         private String getData() {return data;}
     }
