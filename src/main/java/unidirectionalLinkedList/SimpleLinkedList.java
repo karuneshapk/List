@@ -18,32 +18,46 @@ public class SimpleLinkedList {
         }
     }
 
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (!(o instanceof SimpleLinkedList)) return false;
+//
+//        SimpleLinkedList that = (SimpleLinkedList) o;
+//
+//        if (getHeadNode() != null ? !getHeadNode().equals(that.getHeadNode()) : that.getHeadNode() != null)
+//            return false;
+//        return getEndNode() != null ? getEndNode().equals(that.getEndNode()) : that.getEndNode() == null;
+//    }
+
     @Override
     public String toString() {
         Node currentlyObservedNode = headNode;
         final StringBuilder sb = new StringBuilder("[");
         boolean flagFirstItem = false;
-        while (true) {
-            if (currentlyObservedNode == null) {
-                sb.append("]");
-                return sb.toString();
-            } else {
-                if (flagFirstItem) {
-                    sb.append(", ");
-                }
-                sb.append(currentlyObservedNode.getData());
-                flagFirstItem = true;}
+        while (currentlyObservedNode != null) {
+            if (flagFirstItem) {
+                sb.append(", ");
+            }
+            sb.append(currentlyObservedNode.getData());
+            flagFirstItem = true;
             currentlyObservedNode = currentlyObservedNode.nextNode();
         }
+        sb.append("]");
+        return sb.toString();
     }
+
     public void revert() {
+        if (headNode == null) {
+            return;
+        }
         Node firstCurrentlyObservedNode = headNode;
         Node secondObservedNode = firstCurrentlyObservedNode.nextNode();
         if (secondObservedNode == null) {
             return;
         }
         firstCurrentlyObservedNode.changeRefOnPreviousNode(null);
-        this.endNode = firstCurrentlyObservedNode;
+        endNode = firstCurrentlyObservedNode;
 
         while (true) {
             Node thirdObservedNode = secondObservedNode.nextNode();
