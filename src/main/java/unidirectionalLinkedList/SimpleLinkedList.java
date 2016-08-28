@@ -3,9 +3,14 @@ package unidirectionalLinkedList;
 public class SimpleLinkedList {
     private Node headNode;
     private Node endNode;
-    public Node getHeadNode() {return headNode;}
 
-    public Node getEndNode() {return endNode;}
+    public Node getHeadNode() {
+        return headNode;
+    }
+
+    public Node getEndNode() {
+        return endNode;
+    }
 
     public void add(String value) {
         if (headNode == null) {
@@ -14,7 +19,7 @@ public class SimpleLinkedList {
         } else {
             Node node = endNode;
             endNode = new Node(value, null);
-            node.changeRefOnPreviousNode(endNode);
+            node.changeRef(endNode);
         }
     }
 
@@ -51,25 +56,21 @@ public class SimpleLinkedList {
         if (headNode == null) {
             return;
         }
-        Node firstCurrentlyObservedNode = headNode;
-        Node secondObservedNode = firstCurrentlyObservedNode.nextNode();
-        if (secondObservedNode == null) {
-            return;
-        }
-        firstCurrentlyObservedNode.changeRefOnPreviousNode(null);
-        endNode = firstCurrentlyObservedNode;
 
-        while (true) {
-            Node thirdObservedNode = secondObservedNode.nextNode();
-            if (thirdObservedNode == null) {
-                secondObservedNode.changeRefOnPreviousNode(firstCurrentlyObservedNode);
-                headNode = secondObservedNode;
-                return;
-            }
-            secondObservedNode.changeRefOnPreviousNode(firstCurrentlyObservedNode);
-            firstCurrentlyObservedNode = secondObservedNode;
-            secondObservedNode = thirdObservedNode;
+        Node item = headNode;
+        Node previousItem = null;
+
+        while (item.nextNode() != null) {
+            Node NextItem = item.nextNode();
+
+            item.changeRef(previousItem);
+            previousItem = item;
+            item = NextItem;
         }
+        item.changeRef(previousItem);
+
+        endNode = headNode;
+        headNode = item;
     }
 
     private class Node {
@@ -81,10 +82,16 @@ public class SimpleLinkedList {
             this.data = data;
         }
 
-        private Node nextNode() { return nextNode;}
+        private Node nextNode() {
+            return nextNode;
+        }
 
-        private void changeRefOnPreviousNode(Node node) {this.nextNode = node;}
+        private void changeRef(Node node) {
+            this.nextNode = node;
+        }
 
-        private String getData() {return data;}
+        private String getData() {
+            return data;
+        }
     }
 }
